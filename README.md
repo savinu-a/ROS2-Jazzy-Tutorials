@@ -1,44 +1,90 @@
-# ROS2-Jazzy-Tutorials
-A repository containing tutorials for ROS2 Jazzy release with a focus on Robotics projects and labs.
+---
+# Robotics Module: PID Control Lab
 
-## Prerequisites
-You should have the following installed:
-- ROS2 Jazzy
-- Gazebo
+This repository contains a Jupyter Notebook-based lab assignment focused on **Proportional-Integral-Derivative (PID) control** for a simulated robotic arm joint. The goal is to provide a hands-on experience with PID tuning, specifically using the **Ziegler-Nichols oscillation method** and subsequent fine-tuning.
 
-## URDF
-This section contains tutorials related to URDF (Unified Robot Description Format) files, which are used to describe the physical properties of a robot.
-- **URDF Basics**: An introduction to URDF, its structure, and how to create a simple URDF file.
-- **URDF with Gazebo**: A tutorial on how to use URDF files with Gazebo for simulation.
+---
 
-Create a package for this robot as we've discussed in previous sessions. Within the package directory, create a folder named `urdf` and place the URDF file inside it. Use the same file names for your ease. If you choose different filenames make sure to make changes appropriately in all required files including the launch files. The structure of the packages should look like this:
+## Assignment Overview
 
+The lab assignment guides you through the process of controlling the angular position of a simplified robotic arm joint. You'll implement a PID controller from scratch, learn to apply a standard tuning method, and observe the effects of each PID term on system performance through graphical analysis.
+
+---
+
+## How to Navigate the Assignment
+
+Follow these steps to complete the PID Control Lab assignment:
+
+### 1. **Clone the Repository (or Download the Notebook)**
+If this is a Git repository, clone it to your local machine:
+```bash
+git clone <repository_url>
+cd <repository_name>
 ```
-your_package/
-├── urdf/
-│   └── robot.xacro
-│   └── robot.gazebo
-├── launch/
-│   └── your_robot.launch.py
-├── src/
-│   └── your_robot_node.cpp
-├── worlds/
-│   └── four_walls.world
-├── package.xml
-└── CMakeLists.txt
+Otherwise, simply download the `PID_Control_Lab.ipynb` file directly.
+
+### 2. **Set Up Your Python Environment**
+
+You'll need Python and a few libraries installed. It's recommended to use a virtual environment.
+
+```bash
+# Create a virtual environment
+python -m venv venv
+
+# Activate the virtual environment
+# On Windows:
+.\venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install necessary libraries
+pip install numpy matplotlib jupyter
 ```
 
-The files in the `robot` directory in this branch contain partially completed URDF files. You can use these as a starting point for your own robot. The final output should be a complete URDF file that describes a four-wheeled robot with a camera, a sonar sensor and a lidar sensor.
+### 3. **Launch Jupyter Notebook**
 
-Next you should write a control node to make the robot randomly traverse within a four walled area without making any collisions. This should be done from scratch using the values taken from the sensors by subscribing to the topics. You can control the robot using the `geometry_msgs/Twist` message type. The node should subscribe to the camera, sonar and lidar topics and publish to the `cmd_vel` topic.
+From your terminal in the assignment's directory, start Jupyter Notebook:
 
-Finally, to launch the robot in Gazebo you should create a launch file. A partially completed launch file is provided in the `launch` directory. You can use this as a starting point for your own launch file. The final output should be a launch file that launches the robot in Gazebo with the URDF file and the control node.
+```bash
+jupyter notebook
+```
 
+This command will open a new tab in your web browser, displaying the Jupyter interface.
 
-## Tasks
-1. **Create a URDF file**: Create a URDF file for a four-wheeled robot with a camera, sonar sensor, and lidar sensor.
-2. **Write a control node**: Write a control node that makes the robot randomly traverse within a four-walled area without making any collisions.
-3. **Create a launch file**: Create a launch file that launches the robot in Gazebo with the URDF file and the control node.
-4. **Test the robot**: Test the robot in Gazebo and make sure it is working as expected.
-5. **Document the process**: Document the process of creating the URDF file, control node, and launch file. Include any challenges faced and how they were overcome.
+### 4. **Open the Assignment Notebook**
 
+In the Jupyter interface, navigate to and click on `PID_Control_Lab.ipynb` to open the assignment.
+
+### 5. **Work Through the Notebook Cells**
+
+The assignment is structured with markdown explanations and executable code cells.
+
+* **Read the Explanations:** Carefully go through the introductory sections on PID control and the robotic arm use case.
+* **Run Code Cells:** Execute each code cell sequentially. You can run a cell by clicking on it and pressing `Shift + Enter`, or by using the "Run" button in the toolbar.
+    * **`PIDController` Class:** This cell defines the core PID logic.
+    * **`robotic_arm_joint_model` Function:** This cell defines the simulation model for the robotic arm joint.
+* **Follow the Step-by-Step Guide:** The "Assignment: PID Tuning for Robotic Arm Joint Control" section provides clear instructions:
+    * **Step 1: P-only Control:** You will need to **adjust the `Kp_test` value** in the provided code cell and re-run it to observe the system's response. Your goal is to find the point where sustained oscillations occur.
+    * **Step 2: Determine $K_u$ and $T_u$:** Based on your observations from Step 1, manually determine the Ultimate Gain ($K_u$) and Ultimate Period ($T_u$). Record these values in the markdown cell.
+    * **Step 3: Calculate PID Parameters:** Use the Ziegler-Nichols table to calculate the initial PID gains ($K_p, K_i, K_d$).
+    * **Step 4: Implement and Simulate PID Control:** **Update the `Kp_zn`, `Ki_zn`, and `Kd_zn` variables** in the provided code cell with your calculated values and run the simulation. Observe the system's initial PID performance.
+    * **Step 5: Fine-Tuning:** This is a crucial step. **Iteratively adjust the `Kp_tuned`, `Ki_tuned`, and `Kd_tuned` values** in the dedicated code cell. Your aim is to achieve optimal performance (e.g., fast response, minimal overshoot, no steady-state error). Run the cell after each adjustment to see the impact on the graphs.
+
+### 6. **Answer Assessment Questions**
+
+At the end of the notebook, you'll find a section titled "Assessment Questions." Answer these questions thoroughly, using your observations, calculated values, and generated plots as evidence. You may need to add new markdown cells below each question to type your answers.
+
+---
+
+## Important Tips
+
+* **Save Your Work:** Regularly save your Jupyter Notebook (`Ctrl + S` or `Cmd + S`).
+* **Observe the Graphs:** The plots are your primary tool for understanding how the system responds and how your PID parameters affect its behavior. Pay close attention to:
+    * **Rise Time:** How quickly the angle reaches the setpoint.
+    * **Overshoot:** How much the angle exceeds the setpoint before settling.
+    * **Settling Time:** How long it takes for the angle to settle within a certain range of the setpoint.
+    * **Steady-State Error:** Any persistent difference between the current angle and the setpoint once the system has settled.
+    * **Control Output:** Observe the control signal being generated. Wild oscillations or very large/small values might indicate issues with tuning.
+* **Experiment:** Don't be afraid to try different values for your PID gains. The goal is to build an intuitive understanding of how each term contributes to the overall control.
+
+Good luck with your PID tuning!
